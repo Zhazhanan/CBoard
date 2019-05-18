@@ -22,6 +22,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <io.springfox.swagger2>2.8.0</io.springfox.swagger2>
+        <com.github.xiaoymin.swagger.bootstrapui>1.8.2</com.github.xiaoymin.swagger.bootstrapui>
     </properties>
 
     <dependencies>
@@ -195,6 +197,23 @@
             <artifactId>logstash-logback-encoder</artifactId>
             <version>4.11</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${io.springfox.swagger2}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${io.springfox.swagger2}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>${com.github.xiaoymin.swagger.bootstrapui}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
