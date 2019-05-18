@@ -3,6 +3,7 @@ package org.cboard.modules.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.swagger.annotations.Api;
 import org.cboard.modules.services.BoardService;
 import org.cboard.modules.services.HomepageService;
 import org.cboard.modules.services.ServiceStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/homepage")
+@Api(tags = {"Homepage"}, description = "Manage Homepage")
 public class HomepageController extends BaseController {
     
     @Autowired

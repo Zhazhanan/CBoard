@@ -2,6 +2,7 @@ package org.cboard.modules.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
 import org.cboard.modules.dto.DashboardMenu;
 import org.cboard.modules.dto.User;
 import org.cboard.modules.services.AdminSerivce;
@@ -21,6 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/commons")
+@Api(tags = {"Commons"}, description = "Manage User、Menu、changePwd、persist")
 public class CommonsController extends BaseController {
 
     @Autowired

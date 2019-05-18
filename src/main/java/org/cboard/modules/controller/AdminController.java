@@ -3,6 +3,7 @@ package org.cboard.modules.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import io.swagger.annotations.Api;
 import org.cboard.modules.dao.*;
 import org.cboard.modules.dto.*;
 import org.cboard.modules.pojo.*;
@@ -11,6 +12,7 @@ import org.cboard.modules.services.DatasourceService;
 import org.cboard.modules.services.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/admin")
+@Api(tags = {"Admin"}, description = "Manage User、Role、Dataset、Job、Board、Widget、Datasource、Menu")
 public class AdminController extends BaseController {
 
     @Autowired

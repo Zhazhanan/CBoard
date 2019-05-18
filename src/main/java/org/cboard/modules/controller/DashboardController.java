@@ -6,6 +6,7 @@ import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.hash.Hashing;
+import io.swagger.annotations.Api;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.cboard.dataprovider.DataProviderManager;
@@ -46,6 +47,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/dashboard")
+@Api(tags = {"Dashboard"}, description = "Manage Datasource、Provider、changePwd、Persist")
 public class DashboardController extends BaseController {
 
     @Autowired

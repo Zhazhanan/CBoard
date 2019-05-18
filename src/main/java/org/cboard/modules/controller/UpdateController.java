@@ -2,6 +2,7 @@ package org.cboard.modules.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.cboard.modules.dao.DatasetDao;
 import org.cboard.modules.dao.WidgetDao;
@@ -21,6 +22,7 @@ import java.util.function.Consumer;
  */
 @RestController
 @RequestMapping("/update")
+@Api(tags = {"Update"}, description = "Manage dataset、widget")
 public class UpdateController extends BaseController {
 
     @Value("${admin_user_id}")
