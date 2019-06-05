@@ -5,7 +5,7 @@ server:
 spring:
   datasource:
     druidDataSource:
-      url: jdbc:mysql://127.0.0.1:3306/cboard?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull
+      url: jdbc:mysql://127.0.0.1:3306/cboard?useUnicode=true&useSSL=false&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
       username: root
       password: root
       name: CBoard Meta Data
@@ -57,3 +57,8 @@ admin_user_id: 1
 
 phantom_path: D:/Program Files/phantomjs-2.1.1/bin/phantomjs.exe
 phantomjs_path: E:\github\CBoard\src\main\resources\static\phantom.js
+
+swagger:
+  enable: true
+
+
