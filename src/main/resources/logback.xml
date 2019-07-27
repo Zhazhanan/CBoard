@@ -14,7 +14,7 @@
     <property name="LOG_HOME" value="${ROOT_PATH}/microservice_log/${APP_NAME}"/>
 
     <!-- ELK Log output directory -->
-    <property name="ELK_LOG_HOME" value="${ROOT_PATH}/elk_info_logs"/>
+<!--    <property name="ELK_LOG_HOME" value="${ROOT_PATH}/elk_info_logs"/>-->
 
     <!-- console -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -35,7 +35,7 @@
     </appender>
 
     <!-- ELK Log collection（Json format，One file per hour） -->
-    <appender name="ELK" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--<appender name="ELK" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${ELK_LOG_HOME}/${APP_NAME}_elk_%d{yyyy-MM-dd_HH}.log</FileNamePattern>
         </rollingPolicy>
@@ -50,7 +50,7 @@
                 </pattern>
             </providers>
         </encoder>
-    </appender>
+    </appender>-->
 
 
     <!--myibatis log configure-->

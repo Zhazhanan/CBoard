@@ -322,15 +322,9 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
-                    <exclude>/*.properties</exclude>
-                    <exclude>/*.yml</exclude>
+                    <exclude>**/*.xml</exclude>
                 </excludes>
                 <includes>
-                    <!--<include>**/*.yml</include>-->
-                    <!--<include>**/*.properties</include>-->
-                    <!--<include>**/*.xml</include>-->
-                    <!--<include>**/*.html</include>-->
-                    <!--<include>**/*.js</include>-->
                     <include>**/*.*</include>
                 </includes>
             </resource>
