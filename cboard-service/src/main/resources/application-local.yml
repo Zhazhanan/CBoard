@@ -1,0 +1,72 @@
+server:
+  port: 8888
+#  servlet:
+#    context-path: /cboard
+spring:
+#  resources:
+#    static-locations: classpath:/static/
+  datasource:
+    druidDataSource:
+      url: jdbc:mysql://127.0.0.1:3306/cboard?useUnicode=true&useSSL=false&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+      username: root
+      password: root
+      name: CBoard Meta Data
+      validationQuery: SELECT 1
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+       web-allow-others: true
+       trace: true
+    url: jdbc:h2:~/H2Data/cboard;AUTO_SERVER=TRUE;LOG=0;UNDO_LOG=0
+    user:
+      name: sa
+    database:
+      name: cboard
+    cleanjob:
+      quarz: 0 1 0 * * ?
+
+  redis:
+    host: 127.0.0.1
+    port: 6377
+  servlet:
+    multipart:
+      max-file-size: 10485760 #10M
+      max-request-size: 10485760
+  freemarker:
+    cache: false
+    charset: UTF-8
+    suffix: .ftl
+    content-type: text/html
+    template-loader-path: classpath:/templates/config/
+  mail:
+    host: smtp.163.com
+    username: username
+    password: password
+    from: password
+    port: 465
+    default-encoding: UTF-8
+    properties:
+      mail:
+          smtp:
+              auth: true
+              socketFactory:
+                  class: javax.net.ssl.SSLSocketFactory
+log:
+  negativeFilter: List\\.do
+  positveFilter:
+dataprovider:
+  resultLimit: 1000000
+admin_user_id: 1
+
+phantom_path: D:/Program Files/phantomjs-2.1.1/bin/phantomjs.exe
+phantomjs_path: E:\github\CBoard\src\main\resources\static\phantom.js
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
