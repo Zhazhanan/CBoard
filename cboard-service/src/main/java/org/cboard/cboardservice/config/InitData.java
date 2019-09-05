@@ -5,6 +5,8 @@ import org.cboard.cboardservice.modules.pojo.DashboardJob;
 import org.cboard.cboardservice.modules.services.job.JobService;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.TriggerKey;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author WangKun
@@ -43,6 +46,17 @@ public class InitData implements ApplicationRunner {
     public void configScheduler() {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         try {
+            GroupMatcher<TriggerKey> matcher = GroupMatcher.anyTriggerGroup();
+            Set<TriggerKey> triggerKeySet = scheduler.getTriggerKeys(matcher);
+            if (!triggerKeySet.isEmpty()) {
+                triggerKeySet.forEach(triggerKey -> {
+                    try {
+                        scheduler.unscheduleJob(triggerKey);
+                    } catch (SchedulerException e) {
+                        LOGGER.error("", e);
+                    }
+                });
+            }
             scheduler.clear();
         } catch (SchedulerException e) {
             LOGGER.error("", e);
