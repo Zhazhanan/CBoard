@@ -12,7 +12,7 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
     $scope.params = [];
     
     var getDatasourceList = function () {
-        $http.get("dashboard/getDatasourceList").success(function (response) {
+        $http.get("mock/dashboard/datasource.json").success(function (response) {
             $scope.datasourceList = response;
             if ($stateParams.id) {
                 $scope.editDs(_.find($scope.datasourceList, function (dsr) {
@@ -24,7 +24,7 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
 
     getDatasourceList();
 
-    $http.get("dashboard/getProviderList").success(function (response) {
+    $http.get("mock/dashboard/provider.json").success(function (response) {
         $scope.providerList = response;
     });
 
@@ -38,7 +38,7 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
         $scope.curDatasource = angular.copy(ds);
         $scope.changeDsView();
         $scope.doDatasourceParams();
-        $state.go('org.cboard.cboardservice.config.datasource', {id: ds.id}, {notify: false});
+        $state.go('config.datasource', {id: ds.id}, {notify: false});
     };
     $scope.deleteDs = function (ds) {
         // var isDependent = false;
@@ -131,11 +131,11 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
                 var checked = $scope.params[i].checked;
                 var type = $scope.params[i].type;
                 if(type == "checkbox" && checked == true){
-                    org.cboard.cboardservice.config[name] = true;
+                    $scope.curDatasource.config[name] = true;
                 }if(type == "number" && value != "" && !isNaN(value)){
-                    org.cboard.cboardservice.config[name] = Number(value);
+                    $scope.curDatasource.config[name] = Number(value);
                 }else if(value != "") {
-                    org.cboard.cboardservice.config[name] = value;
+                    $scope.curDatasource.config[name] = value;
                 }
             }
         });
@@ -158,7 +158,7 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
             var name = $scope.params[i].name;
             var label = $scope.params[i].label;
             var required = $scope.params[i].required;
-            var value = org.cboard.cboardservice.config[name];
+            var value = $scope.curDatasource.config[name];
             if (required == true && value != 0 && (value == undefined || value == "")) {
                 var pattern = /([\w_\s\.]+)/;
                 var msg = pattern.exec(label);

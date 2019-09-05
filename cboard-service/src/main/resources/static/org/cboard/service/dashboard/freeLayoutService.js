@@ -23,7 +23,7 @@ cBoard.service('freeLayoutService', function($http) {
 
     this.widgetData = ()=>{
         let promise = new Promise((resolve, reject)=>{
-            $http.get("dashboard/getWidgetList").success(function (response) {
+            $http.get("mock/dashboard/widget.json").success(function (response) {
                 if (response) {
                     resolve(response);
                 }
@@ -85,13 +85,13 @@ cBoard.service('freeLayoutService', function($http) {
                     top: gridTop + 'px'
                 });
                 let obj = {
-                    config: org.cboard.cboardservice.config,
+                    config: widget.data.config,
                     datasetId: widget.data.datasetId,
                     datasource: null,
                     query: {}
                 };
                 callback.render($('.widget_' + reportId + ' .chart_widget'), obj, (option)=>{
-                    switch (widget.org.cboard.cboardservice.config.chart_type) {
+                    switch (widget.data.config.chart_type) {
                         case 'line':
                             $scope.previewDivWidth = 12;
                             option.toolbox = {

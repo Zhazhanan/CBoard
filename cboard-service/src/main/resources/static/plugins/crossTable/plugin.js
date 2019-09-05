@@ -61,12 +61,12 @@ var crossTable = {
             }
             for (var c = 0; c < colList.length; c++) {
                 var d = ""
-                if (drill && org.cboard.cboardservice.config[groupId] && (org.cboard.cboardservice.config[groupId].down || org.cboard.cboardservice.config[groupId].up)) {
+                if (drill && drill.config[groupId] && (drill.config[groupId].down || drill.config[groupId].up)) {
                     d += "class='table_drill_cell'";
-                    if (org.cboard.cboardservice.config[groupId].down) {
+                    if (drill.config[groupId].down) {
                         d += " drill-down='" + groupId + "' ";
                     }
-                    if (org.cboard.cboardservice.config[groupId].up) {
+                    if (drill.config[groupId].up) {
                         d += " drill-up='" + groupId + "' ";
                     }
                 }
@@ -218,12 +218,12 @@ var crossTable = {
                 var cur_data = this.dataWrap(currentCell.data ? currentCell.data : "");
                 var keyId = chartConfig.keys[m].id;
                 var align = chartConfig.keys[m].align;
-                if (drill && org.cboard.cboardservice.config[keyId] && (org.cboard.cboardservice.config[keyId].down || org.cboard.cboardservice.config[keyId].up)) {
+                if (drill && drill.config[keyId] && (drill.config[keyId].down || drill.config[keyId].up)) {
                     var d = "";
-                    if (org.cboard.cboardservice.config[keyId].down) {
+                    if (drill.config[keyId].down) {
                         d += " drill-down='" + keyId + "' ";
                     }
-                    if (org.cboard.cboardservice.config[keyId].up) {
+                    if (drill.config[keyId].up) {
                         d += " drill-up='" + keyId + "' ";
                     }
                     cur_data = "<div class='table_drill_cell' " + d + ">" + cur_data + "</div>";

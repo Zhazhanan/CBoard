@@ -7,7 +7,7 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
     $scope.loading = true;
     $scope.paramInit = 0;
     $scope.relations = JSON.stringify([]);
-    $http.get("dashboard/getDatasetList").success(function (response) {
+    $http.get("mock/dashboard/dataset.json").success(function (response) {
         $scope.datasetList = response;
         $scope.realtimeDataset = {};
         $scope.datasetMeta = {};
@@ -87,7 +87,7 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
     var buildRender = function (widget, reload) {
         widget.render = function (content, optionFilter, scope) {
             // 百度地图特殊处理
-            var charType = org.cboard.cboardservice.config.chart_type;
+            var charType = injectFilter(widget.widget).data.config.chart_type;
             if (charType == 'chinaMapBmap') {
                 chartService.render(content, injectFilter(widget.widget).data, optionFilter, scope, reload);
                 widget.loading = false;
@@ -293,7 +293,7 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
                 boardFilters.push(e);
             });
         }
-        org.cboard.cboardservice.config.boardFilters = boardFilters;
+        widget.data.config.boardFilters = boardFilters;
         return widget;
     };
 
@@ -446,7 +446,7 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
     };
 
     $scope.config = function (widget) {
-        $state.go('org.cboard.cboardservice.config.widget', {id: widget.widget.id});
+        $state.go('config.widget', {id: widget.widget.id});
     };
     
     $scope.skip = function (widget) {
@@ -460,7 +460,7 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
         widget.showDiv = true;
         widget.render = function (content, optionFilter, scope) {
             //百度地图特殊处理
-            var charType = org.cboard.cboardservice.config.chart_type;
+            var charType = widget.widget.data.config.chart_type;
             if (charType == 'chinaMapBmap') {
                 chartService.render(content, widget.widget.data, optionFilter, scope, true);
                 widget.loading = false;
@@ -480,7 +480,7 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
 
     $http.get("dashboard/getBoardParam?boardId=" + $stateParams.id).success(function (response) {
         if (response) {
-            $scope.boardParams = JSON.parse(org.cboard.cboardservice.config);
+            $scope.boardParams = JSON.parse(response.config);
         } else {
             $scope.boardParams = [];
         }
@@ -507,7 +507,7 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
     };
 
     $scope.editBoard = function () {
-        $state.go('org.cboard.cboardservice.config.board', {boardId: $stateParams.id});
+        $state.go('config.board', {boardId: $stateParams.id});
     };
 
     $scope.deleteBoardParam = function (index) {

@@ -6,14 +6,14 @@ cBoard.controller('mailJobCtrl', function ($scope, $uibModalInstance, $http, $fi
     $scope.boardType = [{name: 'Xls', type: 'xls'}, {name: 'Image', type: 'img'}, {name: 'Both', type: 'xls,img'}];
 
     var init = function () {
-        if (!org.cboard.cboardservice.config) {
+        if (!$scope.$parent.job.config) {
             $scope.config = {boards: []};
         }else{
-            $scope.config = angular.copy(org.cboard.cboardservice.config);
+            $scope.config = angular.copy($scope.$parent.job.config);
         }
     }();
     var getBoardList = function () {
-        $http.get("dashboard/getBoardList").success(function (response) {
+        $http.get("mock/dashboard/board.json").success(function (response) {
             $scope.boardList = response;
         });
     }();

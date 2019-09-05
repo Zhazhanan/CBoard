@@ -10,7 +10,7 @@ cBoard.controller('categoryCtrl', function ($scope, $http, ModalUtils, $filter) 
     $scope.verify = {categoryName:true};
 
     var getCategoryList = function () {
-        $http.get("dashboard/getCategoryList").success(function (response) {
+        $http.get("mock/dashboard/boardCategory.json").success(function (response) {
             $scope.categoryList = response;
         });
     };

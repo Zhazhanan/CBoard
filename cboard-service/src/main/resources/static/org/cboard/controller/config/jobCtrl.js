@@ -7,7 +7,7 @@ cBoard.controller('jobCtrl', function ($scope, $rootScope, $http, dataService, $
     $scope.jobTypes = [{name: 'Send Mail', type: 'mail'}];
 
     $scope.interval = $interval(function () {
-        $http.get("dashboard/getJobList").success(function (response) {
+        $http.get("mock/dashboard/job.json").success(function (response) {
             _.each($scope.jobList, function (e) {
                 var j = _.find(response, function (r) {
                     return e.id == r.id;
@@ -26,7 +26,7 @@ cBoard.controller('jobCtrl', function ($scope, $rootScope, $http, dataService, $
     );
 
     $scope.loadJobList = function () {
-        $http.get("dashboard/getJobList").success(function (response) {
+        $http.get("mock/dashboard/job.json").success(function (response) {
             $scope.jobList = response;
         });
     };

@@ -9557,7 +9557,7 @@ function stringParse( string ) {
 
 			// if this was an rgba parse the assignment might happen twice
 			// oh well....
-			inst[ org.cboard.cboardservice.cache ] = parsed[ org.cboard.cboardservice.cache ];
+			inst[ spaces[ spaceName ].cache ] = parsed[ spaces[ spaceName ].cache ];
 			rgba = inst._rgba = parsed._rgba;
 
 			// exit each( stringParsers ) here because we matched
@@ -9615,13 +9615,13 @@ color.fn = jQuery.extend( color.prototype, {
 		if ( type === "object" ) {
 			if ( red instanceof color ) {
 				each( spaces, function( spaceName, space ) {
-					if ( red[ org.cboard.cboardservice.cache ] ) {
-						inst[ org.cboard.cboardservice.cache ] = red[ org.cboard.cboardservice.cache ].slice();
+					if ( red[ space.cache ] ) {
+						inst[ space.cache ] = red[ space.cache ].slice();
 					}
 				});
 			} else {
 				each( spaces, function( spaceName, space ) {
-					var cache = org.cboard.cboardservice.cache;
+					var cache = space.cache;
 					each( space.props, function( key, prop ) {
 
 						// if the cache doesn't exist, and we know how to convert
@@ -9660,9 +9660,9 @@ color.fn = jQuery.extend( color.prototype, {
 
 		each( spaces, function( _, space ) {
 			var localCache,
-				isCache = is[ org.cboard.cboardservice.cache ];
+				isCache = is[ space.cache ];
 			if (isCache) {
-				localCache = inst[ org.cboard.cboardservice.cache ] || space.to && space.to( inst._rgba ) || [];
+				localCache = inst[ space.cache ] || space.to && space.to( inst._rgba ) || [];
 				each( space.props, function( _, prop ) {
 					if ( isCache[ prop.idx ] != null ) {
 						same = ( isCache[ prop.idx ] === localCache[ prop.idx ] );
@@ -9678,7 +9678,7 @@ color.fn = jQuery.extend( color.prototype, {
 		var used = [],
 			inst = this;
 		each( spaces, function( spaceName, space ) {
-			if ( inst[ org.cboard.cboardservice.cache ] ) {
+			if ( inst[ space.cache ] ) {
 				used.push( spaceName );
 			}
 		});
@@ -9689,10 +9689,10 @@ color.fn = jQuery.extend( color.prototype, {
 			spaceName = end._space(),
 			space = spaces[ spaceName ],
 			startColor = this.alpha() === 0 ? color( "transparent" ) : this,
-			start = startColor[ org.cboard.cboardservice.cache ] || space.to( startColor._rgba ),
+			start = startColor[ space.cache ] || space.to( startColor._rgba ),
 			result = start.slice();
 
-		end = end[ org.cboard.cboardservice.cache ];
+		end = end[ space.cache ];
 		each( space.props, function( key, prop ) {
 			var index = prop.idx,
 				startValue = start[ index ],
@@ -9862,7 +9862,7 @@ spaces.hsla.from = function( hsla ) {
 
 each( spaces, function( spaceName, space ) {
 	var props = space.props,
-		cache = org.cboard.cboardservice.cache,
+		cache = space.cache,
 		to = space.to,
 		from = space.from;
 

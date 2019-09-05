@@ -1704,7 +1704,7 @@ function globalHandleError (err, vm, info) {
     try {
       return config.errorHandler.call(null, err, vm, info)
     } catch (e) {
-      logError(e, null, 'org.cboard.cboardservice.config.errorHandler');
+      logError(e, null, 'config.errorHandler');
     }
   }
   logError(err, vm, info);
@@ -3442,7 +3442,7 @@ function defineComputed (
     sharedPropertyDefinition.set = noop;
   } else {
     sharedPropertyDefinition.get = userDef.get
-      ? shouldCache && org.cboard.cboardservice.cache !== false
+      ? shouldCache && userDef.cache !== false
         ? createComputedGetter(key)
         : userDef.get
       : noop;
@@ -4826,7 +4826,7 @@ function matches (pattern, name) {
 }
 
 function pruneCache (keepAliveInstance, filter) {
-  var cache = org.cboard.cboardservice.cache;
+  var cache = keepAliveInstance.cache;
   var keys = keepAliveInstance.keys;
   var _vnode = keepAliveInstance._vnode;
   for (var key in cache) {
@@ -8394,11 +8394,11 @@ var platformComponents = {
 /*  */
 
 // install platform specific utils
-org.cboard.cboardservice.config.mustUseProp = mustUseProp;
-org.cboard.cboardservice.config.isReservedTag = isReservedTag;
-org.cboard.cboardservice.config.isReservedAttr = isReservedAttr;
-org.cboard.cboardservice.config.getTagNamespace = getTagNamespace;
-org.cboard.cboardservice.config.isUnknownElement = isUnknownElement;
+Vue$3.config.mustUseProp = mustUseProp;
+Vue$3.config.isReservedTag = isReservedTag;
+Vue$3.config.isReservedAttr = isReservedAttr;
+Vue$3.config.getTagNamespace = getTagNamespace;
+Vue$3.config.isUnknownElement = isUnknownElement;
 
 // install platform runtime directives & components
 extend(Vue$3.options.directives, platformDirectives);

@@ -275,7 +275,7 @@ var requirejs, require, define;
 
     function makeConfig(name) {
         return function () {
-            return (config && org.cboard.cboardservice.config && org.cboard.cboardservice.config[name]) || {};
+            return (config && config.config && config.config[name]) || {};
         };
     }
 

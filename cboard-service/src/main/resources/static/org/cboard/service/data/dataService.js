@@ -10,7 +10,7 @@ cBoard.service('dataService', function ($http, $q, updateService) {
         if (datasetList) {
             deferred.resolve(angular.copy(datasetList));
         } else {
-            $http.get("dashboard/getDatasetList").success(function (data) {
+            $http.get("mock/dashboard/dataset.json").success(function (data) {
                 deferred.resolve(data);
             });
         }

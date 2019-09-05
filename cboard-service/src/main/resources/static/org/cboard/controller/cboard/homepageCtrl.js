@@ -8,7 +8,7 @@ cBoard.controller('homepageCtrl', function ($rootScope, $scope, $state, $http, $
     var originalData = [];
 
     var getDatasetList = function () {
-        $http.get("dashboard/getDatasetList").success(function (response) {
+        $http.get("mock/dashboard/dataset.json").success(function (response) {
             $scope.datasetList = response;
             $scope.searchNode();
         });
@@ -49,7 +49,7 @@ cBoard.controller('homepageCtrl', function ($rootScope, $scope, $state, $http, $
     $scope.editNode = function () {
         if (!checkTreeNode("edit")) return;
         var selectedNode = jstree_GetSelectedNodes(treeID)[0];
-        $state.go('org.cboard.cboardservice.config.widget', {datasetId: selectedNode.id}, {inherit: false});
+        $state.go('config.widget', {datasetId: selectedNode.id}, {inherit: false});
     };
 
     $scope.searchNode = function () {

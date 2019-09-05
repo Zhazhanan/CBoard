@@ -44,12 +44,12 @@ cBoard.controller('datasetCtrl', function ($scope, $http, $state, $stateParams, 
         }
     };
 
-    $http.get("dashboard/getDatasourceList").success(function (response) {
+    $http.get("mock/dashboard/datasource.json").success(function (response) {
         $scope.datasourceList = response;
     });
 
     var getDatasetList = function () {
-        $http.get("dashboard/getDatasetList").success(function (response) {
+        $http.get("mock/dashboard/dataset.json").success(function (response) {
             $scope.datasetList = response;
             $scope.searchNode();
             if ($stateParams.id) {
@@ -61,7 +61,7 @@ cBoard.controller('datasetCtrl', function ($scope, $http, $state, $stateParams, 
     };
 
     var getCategoryList = function () {
-        $http.get("dashboard/getDatasetCategoryList").success(function (response) {
+        $http.get("mock/dashboard/datasetCategory.json").success(function (response) {
             $scope.categoryList = response;
             $("#DatasetName").autocomplete({
                 source: $scope.categoryList
@@ -562,7 +562,7 @@ cBoard.controller('datasetCtrl', function ($scope, $http, $state, $stateParams, 
     $scope.editNode = function () {
         if (!checkTreeNode("edit")) return;
         var selectedNode = jstree_GetSelectedNodes(treeID)[0];
-        $state.go('org.cboard.cboardservice.config.dataset', {id: selectedNode.id}, {notify: false});
+        $state.go('config.dataset', {id: selectedNode.id}, {notify: false});
         $scope.editDs(getSelectedDataSet());
     };
 

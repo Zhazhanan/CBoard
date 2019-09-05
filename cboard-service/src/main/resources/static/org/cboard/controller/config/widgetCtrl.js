@@ -291,7 +291,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
 
         var loadDataset = function (callback) {
-            $http.get("dashboard/getDatasetList").success(function (response) {
+            $http.get("mock/dashboard/dataset.json").success(function (response) {
                 $scope.datasetList = response;
                 if (callback) {
                     callback();
@@ -300,7 +300,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
         loadDataset();
 
-        $http.get("dashboard/getDatasourceList").success(function (response) {
+        $http.get("mock/dashboard/datasource.json").success(function (response) {
             $scope.datasourceList = response;
             getCategoryList();
             getWidgetList(function () {
@@ -331,7 +331,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         var getWidgetList = function (callback) {
-            $http.get("dashboard/getWidgetList").success(function (response) {
+            $http.get("mock/dashboard/widget.json").success(function (response) {
                 $scope.widgetList = response;
                 if (callback) {
                     callback();
@@ -341,7 +341,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         var getCategoryList = function () {
-            $http.get("dashboard/getWidgetCategoryList").success(function (response) {
+            $http.get("mock/dashboard/widgetCategory.json").success(function (response) {
                 $scope.categoryList = response;
                 $("#widgetName").autocomplete({
                     source: $scope.categoryList
@@ -446,7 +446,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 $scope.curWidget = curWidget;
             }
             $scope.curWidget.config = {};
-            org.cboard.cboardservice.config.option = {};
+            $scope.curWidget.config.option = {};
             $scope.curWidget.expressions = [];
             $scope.curWidget.filterGroups = [];
             $scope.curWidget.query = {};
@@ -517,19 +517,19 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         var addWatch = function () {
-            $scope.$watch('org.cboard.cboardservice.config.keys', changeChartStatus, true);
-            $scope.$watch('org.cboard.cboardservice.config.groups', changeChartStatus, true);
-            $scope.$watch('org.cboard.cboardservice.config.values', changeChartStatus, true);
-            $scope.$watch('org.cboard.cboardservice.config.filters', changeChartStatus, true);
+            $scope.$watch('curWidget.config.keys', changeChartStatus, true);
+            $scope.$watch('curWidget.config.groups', changeChartStatus, true);
+            $scope.$watch('curWidget.config.values', changeChartStatus, true);
+            $scope.$watch('curWidget.config.filters', changeChartStatus, true);
             addHelpMessage();
             addValidateWatch();
         };
 
         var addHelpMessage = function () {
-            var rowKey = 'HELP_MESSAGE.' + org.cboard.cboardservice.config.chart_type.toUpperCase() + ".ROW";
-            var columnKey = 'HELP_MESSAGE.' + org.cboard.cboardservice.config.chart_type.toUpperCase() + ".COLUMN";
-            var filterKey = 'HELP_MESSAGE.' + org.cboard.cboardservice.config.chart_type.toUpperCase() + ".FILTER";
-            var valueKey = 'HELP_MESSAGE.' + org.cboard.cboardservice.config.chart_type.toUpperCase() + ".VALUE";
+            var rowKey = 'HELP_MESSAGE.' + $scope.curWidget.config.chart_type.toUpperCase() + ".ROW";
+            var columnKey = 'HELP_MESSAGE.' + $scope.curWidget.config.chart_type.toUpperCase() + ".COLUMN";
+            var filterKey = 'HELP_MESSAGE.' + $scope.curWidget.config.chart_type.toUpperCase() + ".FILTER";
+            var valueKey = 'HELP_MESSAGE.' + $scope.curWidget.config.chart_type.toUpperCase() + ".VALUE";
             var row = translate(rowKey) == rowKey ? null : translate(rowKey);
             var column = translate(columnKey) == columnKey ? null : translate(columnKey);
             var filter = translate(filterKey) == filterKey ? null : translate(filterKey);
@@ -589,7 +589,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         var changeChartStatus = function () {
             for (var type in $scope.chart_types_status) {
                 var rule = $scope.configRule[type];
-                var config = org.cboard.cboardservice.config;
+                var config = $scope.curWidget.config;
                 var flattenValues = [];
                 _.each(config.values, function (v) {
                     flattenValues = flattenValues.concat(v.cols);
@@ -629,56 +629,56 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             if (!$scope.chart_types_status[chart_type]) {
                 return;
             }
-            var oldConfig = angular.copy(org.cboard.cboardservice.config);
+            var oldConfig = angular.copy($scope.curWidget.config);
             $scope.curWidget.config = {};
-            org.cboard.cboardservice.config.option = {};
-            org.cboard.cboardservice.config.chart_type = chart_type;
+            $scope.curWidget.config.option = {};
+            $scope.curWidget.config.chart_type = chart_type;
             //loadDsExpressions();
             cleanPreview();
 
-            org.cboard.cboardservice.config.selects = oldConfig.selects;
-            org.cboard.cboardservice.config.keys = oldConfig.keys;
-            org.cboard.cboardservice.config.groups = oldConfig.groups;
-            org.cboard.cboardservice.config.values = [];
+            $scope.curWidget.config.selects = oldConfig.selects;
+            $scope.curWidget.config.keys = oldConfig.keys;
+            $scope.curWidget.config.groups = oldConfig.groups;
+            $scope.curWidget.config.values = [];
 
             addHelpMessage();
 
-            org.cboard.cboardservice.config.filters = oldConfig.filters;
-            switch (org.cboard.cboardservice.config.chart_type) {
+            $scope.curWidget.config.filters = oldConfig.filters;
+            switch ($scope.curWidget.config.chart_type) {
                 case 'line':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    org.cboard.cboardservice.config.valueAxis = 'vertical';
-                    _.each(org.cboard.cboardservice.config.values, function (v) {
+                    $scope.curWidget.config.valueAxis = 'vertical';
+                    _.each($scope.curWidget.config.values, function (v) {
                         v.series_type = 'line';
                         v.type = 'value';
                     });
                     break;
                 case 'pie':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    _.each(org.cboard.cboardservice.config.values, function (v) {
+                    _.each($scope.curWidget.config.values, function (v) {
                         v.series_type = 'pie';
                         v.type = 'value';
                     });
                     break;
                 case 'kpi':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    org.cboard.cboardservice.config.selects = angular.copy($scope.columns);
-                    _.each(org.cboard.cboardservice.config.values, function (v) {
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    _.each($scope.curWidget.config.values, function (v) {
                         v.style = 'bg-aqua';
                     });
                     break;
@@ -687,110 +687,110 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
                             if (i >= 3) {
-                                org.cboard.cboardservice.config.selects.push(c.col);
+                                $scope.curWidget.config.selects.push(c.col);
                                 return;
                             }
-                            if (!org.cboard.cboardservice.config.values[i]) {
-                                org.cboard.cboardservice.config.values[i] = {name: '', cols: []};
+                            if (!$scope.curWidget.config.values[i]) {
+                                $scope.curWidget.config.values[i] = {name: '', cols: []};
                             }
-                            org.cboard.cboardservice.config.values[i].cols.push(c);
+                            $scope.curWidget.config.values[i].cols.push(c);
                             i++
                         });
                     });
                     for (var i = 0; i < 3; i++) {
-                        if (!org.cboard.cboardservice.config.values[i]) {
-                            org.cboard.cboardservice.config.values[i] = {name: '', cols: []};
+                        if (!$scope.curWidget.config.values[i]) {
+                            $scope.curWidget.config.values[i] = {name: '', cols: []};
                         }
                     }
                     break;
                 case 'gauge':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    org.cboard.cboardservice.config.selects = angular.copy($scope.columns);
-                    org.cboard.cboardservice.config.styles = [
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.styles = [
                         {proportion: '0.2', color: '#228b22'},
                         {proportion: '0.8', color: '#48b'},
                         {proportion: '1', color: '#ff4500'}
                     ];
                     break;
                 case 'heatMapCalendar':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    org.cboard.cboardservice.config.selects = angular.copy($scope.columns);
-                    _.each(org.cboard.cboardservice.config.values, function (v) {
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    _.each($scope.curWidget.config.values, function (v) {
                         v.dateFormat = 'yyyy-MM-dd';
                         v.style = 'blue';
                     });
                     break;
                 case 'heatMapTable':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    org.cboard.cboardservice.config.selects = angular.copy($scope.columns);
-                    _.each(org.cboard.cboardservice.config.values, function (v) {
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    _.each($scope.curWidget.config.values, function (v) {
                         v.style = 'blue';
                     });
                     break;
                 case 'liquidFill':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    org.cboard.cboardservice.config.selects = angular.copy($scope.columns);
-                    org.cboard.cboardservice.config.animation = 'static';
-                    _.each(org.cboard.cboardservice.config.values, function (v) {
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.animation = 'static';
+                    _.each($scope.curWidget.config.values, function (v) {
                         v.style = 'circle';
                     });
                     break;
                 case 'chinaMap':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    org.cboard.cboardservice.config.valueAxis = 'vertical';
-                    _.each(org.cboard.cboardservice.config.values, function (v) {
+                    $scope.curWidget.config.valueAxis = 'vertical';
+                    _.each($scope.curWidget.config.values, function (v) {
                         v.series_type = 'scatter';
                         v.type = 'value';
                     });
                     break;
                 case 'chinaMapBmap':
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
-                    org.cboard.cboardservice.config.valueAxis = 'vertical';
-                    _.each(org.cboard.cboardservice.config.values, function (v) {
+                    $scope.curWidget.config.valueAxis = 'vertical';
+                    _.each($scope.curWidget.config.values, function (v) {
                         v.series_type = 'scatter';
                         v.type = 'value';
                     });
                     break;
                 default:
-                    org.cboard.cboardservice.config.values.push({name: '', cols: []});
+                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
-                            org.cboard.cboardservice.config.values[0].cols.push(c);
+                            $scope.curWidget.config.values[0].cols.push(c);
                         });
                     });
                     break;
             }
-            _.each(org.cboard.cboardservice.config.values, function (v) {
+            _.each($scope.curWidget.config.values, function (v) {
                 _.each(v.cols, function (c) {
                     delete c.formatter;
                 });
@@ -800,14 +800,14 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
         $scope.newConfig = function () {
             $scope.curWidget.config = {};
-            org.cboard.cboardservice.config.option = {};
-            org.cboard.cboardservice.config.chart_type = 'table';
+            $scope.curWidget.config.option = {};
+            $scope.curWidget.config.chart_type = 'table';
             cleanPreview();
-            org.cboard.cboardservice.config.selects = angular.copy($scope.columns);
-            org.cboard.cboardservice.config.keys = [];
-            org.cboard.cboardservice.config.groups = [];
-            org.cboard.cboardservice.config.values = [{name: '', cols: []}];
-            org.cboard.cboardservice.config.filters = [];
+            $scope.curWidget.config.selects = angular.copy($scope.columns);
+            $scope.curWidget.config.keys = [];
+            $scope.curWidget.config.groups = [];
+            $scope.curWidget.config.values = [{name: '', cols: []}];
+            $scope.curWidget.config.filters = [];
             addWatch();
         };
 
@@ -824,7 +824,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             });
             $scope.loadingPre = true;
             dataService.viewQuery({
-                config: org.cboard.cboardservice.config,
+                config: $scope.curWidget.config,
                 datasource: $scope.datasource ? $scope.datasource.id : null,
                 query: $scope.curWidget.query,
                 datasetId: $scope.customDs ? undefined : $scope.curWidget.datasetId
@@ -848,11 +848,11 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             // 具体原因没有找到，求大神帮忙解决，thanks！
             $('#preview_widget').html("<div id='preview' style='min-height: 450px; user-select: text;'></div>");
             // --- end ---
-            var charType = org.cboard.cboardservice.config.chart_type;
+            var charType = $scope.curWidget.config.chart_type;
             //百度地图特殊处理
             if (charType == 'chinaMapBmap') {
                 chartService.render($('#preview'), {
-                    config: org.cboard.cboardservice.config,
+                    config: $scope.curWidget.config,
                     datasource: $scope.datasource ? $scope.datasource.id : null,
                     query: $scope.curWidget.query,
                     datasetId: $scope.customDs ? undefined : $scope.curWidget.datasetId
@@ -860,12 +860,12 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 $scope.loadingPre = false;
             } else {
                 chartService.render($('#preview'), {
-                    config: org.cboard.cboardservice.config,
+                    config: $scope.curWidget.config,
                     datasource: $scope.datasource ? $scope.datasource.id : null,
                     query: $scope.curWidget.query,
                     datasetId: $scope.customDs ? undefined : $scope.curWidget.datasetId
                 }, function (option) {
-                    switch (org.cboard.cboardservice.config.chart_type) {
+                    switch ($scope.curWidget.config.chart_type) {
                         case 'line':
                             $scope.previewDivWidth = 12;
                             option.toolbox = {
@@ -939,7 +939,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 // };
 
         $scope.add_value = function () {
-            org.cboard.cboardservice.config.values.push({
+            $scope.curWidget.config.values.push({
                 name: '',
                 series_type: 'line',
                 type: 'value',
@@ -948,7 +948,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.add_pie_value = function () {
-            org.cboard.cboardservice.config.values.push({
+            $scope.curWidget.config.values.push({
                 name: '',
                 series_type: 'pie',
                 type: 'value',
@@ -957,7 +957,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         }
 
         $scope.add_china_map_value = function () {
-            org.cboard.cboardservice.config.values.push({
+            $scope.curWidget.config.values.push({
                 name: '',
                 series_type: 'scatter',
                 type: 'value',
@@ -966,7 +966,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.add_style = function () {
-            org.cboard.cboardservice.config.styles.push({
+            $scope.curWidget.config.styles.push({
                 proportion: '',
                 color: ''
             });
@@ -976,8 +976,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             $timeout(function() {
                 $("#color_"+index).colorpicker()
                     .on("changeColor", function(e){
-                        if(org.cboard.cboardservice.config.styles[e.target.id.split("_")[1]]){
-                            org.cboard.cboardservice.config.styles[e.target.id.split("_")[1]].color = e.color.toHex();
+                        if($scope.curWidget.config.styles[e.target.id.split("_")[1]]){
+                            $scope.curWidget.config.styles[e.target.id.split("_")[1]].color = e.color.toHex();
                         }
                     });
             }, 100,true);
@@ -1006,7 +1006,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 o.categoryName = translate("COMMON.DEFAULT_CATEGORY");
             }
             o.data = {};
-            o.data.config = org.cboard.cboardservice.config;
+            o.data.config = $scope.curWidget.config;
             if ($scope.customDs) {
                 o.data.query = $scope.curWidget.query;
                 o.data.datasource = $scope.datasource.id;
@@ -1097,7 +1097,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             if (!$scope.curWidget.filterGroups) {
                 $scope.curWidget.filterGroups = [];
             }
-            updateService.updateConfig(org.cboard.cboardservice.config);
+            updateService.updateConfig($scope.curWidget.config);
             $scope.datasource = _.find($scope.datasourceList, function (ds) {
                 return ds.id == widget.data.datasource;
             });
@@ -1111,7 +1111,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 loadDsExpressions();
                 loadDsFilterGroups();
                 buildSchema();
-                dataService.linkDataset($scope.curWidget.datasetId, org.cboard.cboardservice.config);
+                dataService.linkDataset($scope.curWidget.datasetId, $scope.curWidget.config);
             });
             addWatch();
         };
@@ -1130,10 +1130,10 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             if (e.type == 'level') {
                 return true;
             }
-            var keys = _.find(org.cboard.cboardservice.config.keys, function (k) {
+            var keys = _.find($scope.curWidget.config.keys, function (k) {
                 return k.col == e.column;
             });
-            var groups = _.find(org.cboard.cboardservice.config.groups, function (k) {
+            var groups = _.find($scope.curWidget.config.groups, function (k) {
                 return k.col == e.column;
             });
             return !(keys || groups);
@@ -1141,7 +1141,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
         $scope.filterExpressions = function (e) {
             var result = false;
-            _.each(org.cboard.cboardservice.config.values, function (v) {
+            _.each($scope.curWidget.config.values, function (v) {
                 _.each(v.cols, function (c) {
                     if (c.type == 'exp') {
                         if (e.id == c.id && e.alias == c.alias) {
@@ -1155,7 +1155,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
         $scope.filterFilterGroup = function (e) {
             var result = false;
-            _.each(org.cboard.cboardservice.config.filters, function (f) {
+            _.each($scope.curWidget.config.filters, function (f) {
                 if (f.group) {
                     if (e.id == f.id && e.group == f.group) {
                         result = true;
@@ -1247,15 +1247,15 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.getChartView = function () {
-            if (org.cboard.cboardservice.config && org.cboard.cboardservice.config.chart_type) {
-                return 'org/cboard/view/config/chart/' + org.cboard.cboardservice.config.chart_type + '.html';
+            if ($scope.curWidget.config && $scope.curWidget.config.chart_type) {
+                return 'org/cboard/view/config/chart/' + $scope.curWidget.config.chart_type + '.html';
             }
         };
 
         $scope.getOptionsView = function () {
             var basePath = 'org/cboard/view/config/chart/options/';
-            if (org.cboard.cboardservice.config && org.cboard.cboardservice.config.chart_type) {
-                return basePath + org.cboard.cboardservice.config.chart_type + '.html';
+            if ($scope.curWidget.config && $scope.curWidget.config.chart_type) {
+                return basePath + $scope.curWidget.config.chart_type + '.html';
             }
         }
 
@@ -1335,8 +1335,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                         return function (byFilter, column, callback) {
                             var config = undefined;
                             if (byFilter) {
-                                config = angular.copy(org.cboard.cboardservice.config);
-                                var arr = _.findKey(org.cboard.cboardservice.config, function (o) {
+                                config = angular.copy($scope.curWidget.config);
+                                var arr = _.findKey($scope.curWidget.config, function (o) {
                                     return o == setbackArr;
                                 });
                                 config[arr].splice(setbackIdx, 1);
@@ -1477,7 +1477,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.cleanVSort = function () {
-            _.each(org.cboard.cboardservice.config.values, function (v) {
+            _.each($scope.curWidget.config.values, function (v) {
                 _.each(v.cols, function (c) {
                     c.sort = undefined;
                 });
@@ -1500,7 +1500,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
         $scope.cleanRowSort = function (o) {
             var sort = o.sort;
-            _.each(org.cboard.cboardservice.config.keys, function (k) {
+            _.each($scope.curWidget.config.keys, function (k) {
                 k.sort = undefined;
             });
             $scope.cleanVSort();
@@ -1550,7 +1550,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         $scope.editNode = function () {
             if (!checkTreeNode("edit")) return;
             var selectedNode = jstree_GetSelectedNodes(treeID)[0];
-            $state.go('org.cboard.cboardservice.config.widget', {id: selectedNode.id}, {notify: false, inherit: false});
+            $state.go('config.widget', {id: selectedNode.id}, {notify: false, inherit: false});
             $scope.editWgt(getSelectedWidget());
         };
 
@@ -1664,12 +1664,12 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         $scope.setCities = function () {
             $scope.cities = [];
             var province = _.find($scope.provinces, function (e) {
-                return e.code == org.cboard.cboardservice.config.province.code;
+                return e.code == $scope.curWidget.config.province.code;
             });
             if (province && province.cities) {
                 $scope.cities = province.cities;
-            } else if (org.cboard.cboardservice.config.city && org.cboard.cboardservice.config.city.code) {
-                org.cboard.cboardservice.config.city.code = "";
+            } else if ($scope.curWidget.config.city && $scope.curWidget.config.city.code) {
+                $scope.curWidget.config.city.code = "";
             }
         }
         /** js tree related End... **/

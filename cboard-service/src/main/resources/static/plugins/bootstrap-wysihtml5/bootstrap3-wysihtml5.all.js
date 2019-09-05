@@ -2741,7 +2741,7 @@ var wysihtml5 = {
 
             // IE 9 and above have both implementations and Rangy makes both available. The next few lines sets which
             // implementation to use by default.
-            if (!api.features.implementsDomRange || org.cboard.cboardservice.config.preferTextRange) {
+            if (!api.features.implementsDomRange || api.config.preferTextRange) {
                 // Add WrappedTextRange as the Range property of the global object to allow expression like Range.END_TO_END to work
                 var globalObj = (function() { return this; })();
                 if (typeof globalObj.Range == "undefined") {
@@ -2793,7 +2793,7 @@ var wysihtml5 = {
     // This module creates a selection object wrapper that conforms as closely as possible to the Selection specification
     // in the HTML Editing spec (http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selections)
     api.createCoreModule("WrappedSelection", ["DomRange", "WrappedRange"], function(api, module) {
-        org.cboard.cboardservice.config.checkSelectionRanges = true;
+        api.config.checkSelectionRanges = true;
 
         var BOOLEAN = "boolean";
         var NUMBER = "number";
@@ -2856,7 +2856,7 @@ var wysihtml5 = {
         features.implementsWinGetSelection = implementsWinGetSelection;
         features.implementsDocSelection = implementsDocSelection;
 
-        var useDocumentSelection = implementsDocSelection && (!implementsWinGetSelection || org.cboard.cboardservice.config.preferTextRange);
+        var useDocumentSelection = implementsDocSelection && (!implementsWinGetSelection || api.config.preferTextRange);
 
         if (useDocumentSelection) {
             getNativeSelection = getDocSelection;
@@ -3289,7 +3289,7 @@ var wysihtml5 = {
 
                                 // Check whether the range that we added to the selection is reflected in the last range extracted from
                                 // the selection
-                                if (org.cboard.cboardservice.config.checkSelectionRanges) {
+                                if (api.config.checkSelectionRanges) {
                                     var nativeRange = getSelectionRangeAt(this.nativeSelection, this.rangeCount - 1);
                                     if (nativeRange && !rangesEqual(nativeRange, range)) {
                                         // Happens in WebKit with, for example, a selection placed at the start of a text node
@@ -10725,7 +10725,7 @@ wysihtml5.Commands = Base.extend(
     exec: function(composer, command, nodeName, className, classRegExp, cssStyle, styleRegExp) {
       var doc             = composer.doc,
           blockElements    = this.state(composer, command, nodeName, className, classRegExp, cssStyle, styleRegExp),
-          useLineBreaks   = org.cboard.cboardservice.config.useLineBreaks,
+          useLineBreaks   = composer.config.useLineBreaks,
           defaultNodeName = useLineBreaks ? "DIV" : "P",
           selectedNodes, classRemoveAction, blockRenameFound, styleRemoveAction, blockElement;
       nodeName = typeof(nodeName) === "string" ? nodeName.toUpperCase() : nodeName;
@@ -11041,7 +11041,7 @@ wysihtml5.commands.formatCode = {
 
       composer.selection.executeAndRestore(function() {
         if (state) {
-          if (org.cboard.cboardservice.config.useLineBreaks) {
+          if (composer.config.useLineBreaks) {
              wysihtml5.dom.lineBreaks(state).add();
           }
           wysihtml5.dom.unwrap(state);
@@ -11286,9 +11286,9 @@ wysihtml5.commands.formatCode = {
       } else {
         innerLists = getListsInSelection(['OL', 'UL'], composer);
         for (var i = innerLists.length; i--;) {
-          wysihtml5.dom.resolveList(innerLists[i], org.cboard.cboardservice.config.useLineBreaks);
+          wysihtml5.dom.resolveList(innerLists[i], composer.config.useLineBreaks);
         }
-        wysihtml5.dom.resolveList(el, org.cboard.cboardservice.config.useLineBreaks);
+        wysihtml5.dom.resolveList(el, composer.config.useLineBreaks);
       }
     });
   };
@@ -11339,7 +11339,7 @@ wysihtml5.commands.formatCode = {
       
       if (tempElement) {
         isEmpty = wysihtml5.lang.array(["", "<br>", wysihtml5.INVISIBLE_SPACE]).contains(tempElement.innerHTML);
-        list = wysihtml5.dom.convertToList(tempElement, nodeName.toLowerCase(), org.cboard.cboardservice.config.uneditableContainerClassname);
+        list = wysihtml5.dom.convertToList(tempElement, nodeName.toLowerCase(), composer.parent.config.uneditableContainerClassname);
         if (isEmpty) {
           composer.selection.selectNode(list.querySelector("li"), true);
         }
@@ -13279,28 +13279,28 @@ wysihtml5.views.View = Base.extend(
       this._isCompatible    = wysihtml5.browser.supported();
 
       if (this.editableElement.nodeName.toLowerCase() != "textarea") {
-          org.cboard.cboardservice.config.contentEditableMode = true;
-          org.cboard.cboardservice.config.noTextarea = true;
+          this.config.contentEditableMode = true;
+          this.config.noTextarea = true;
       }
-      if (!org.cboard.cboardservice.config.noTextarea) {
-          this.textarea         = new wysihtml5.views.Textarea(this, this.editableElement, org.cboard.cboardservice.config);
+      if (!this.config.noTextarea) {
+          this.textarea         = new wysihtml5.views.Textarea(this, this.editableElement, this.config);
           this.currentView      = this.textarea;
       }
 
       // Sort out unsupported/unwanted browsers here
-      if (!this._isCompatible || (!org.cboard.cboardservice.config.supportTouchDevices && wysihtml5.browser.isTouchDevice())) {
+      if (!this._isCompatible || (!this.config.supportTouchDevices && wysihtml5.browser.isTouchDevice())) {
         var that = this;
         setTimeout(function() { that.fire("beforeload").fire("load"); }, 0);
         return;
       }
 
       // Add class name to body, to indicate that the editor is supported
-      wysihtml5.dom.addClass(document.body, org.cboard.cboardservice.config.bodyClassName);
+      wysihtml5.dom.addClass(document.body, this.config.bodyClassName);
 
-      this.composer = new wysihtml5.views.Composer(this, this.editableElement, org.cboard.cboardservice.config);
+      this.composer = new wysihtml5.views.Composer(this, this.editableElement, this.config);
       this.currentView = this.composer;
 
-      if (typeof(org.cboard.cboardservice.config.parser) === "function") {
+      if (typeof(this.config.parser) === "function") {
         this._initParser();
       }
 
@@ -13308,11 +13308,11 @@ wysihtml5.views.View = Base.extend(
     },
 
     handleBeforeLoad: function() {
-        if (!org.cboard.cboardservice.config.noTextarea) {
+        if (!this.config.noTextarea) {
             this.synchronizer = new wysihtml5.views.Synchronizer(this, this.textarea, this.composer);
         }
-        if (org.cboard.cboardservice.config.toolbar) {
-          this.toolbar = new wysihtml5.toolbar.Toolbar(this, org.cboard.cboardservice.config.toolbar, org.cboard.cboardservice.config.showToolbarAfterInit);
+        if (this.config.toolbar) {
+          this.toolbar = new wysihtml5.toolbar.Toolbar(this, this.config.toolbar, this.config.showToolbarAfterInit);
         }
     },
 
@@ -13374,12 +13374,12 @@ wysihtml5.views.View = Base.extend(
     },
 
     parse: function(htmlOrElement, clearInternals) {
-      var parseContext = (org.cboard.cboardservice.config.contentEditableMode) ? document : ((this.composer) ? this.composer.sandbox.getDocument() : null);
-      var returnValue = org.cboard.cboardservice.config.parser(htmlOrElement, {
-        "rules": org.cboard.cboardservice.config.parserRules,
-        "cleanUp": org.cboard.cboardservice.config.cleanUp,
+      var parseContext = (this.config.contentEditableMode) ? document : ((this.composer) ? this.composer.sandbox.getDocument() : null);
+      var returnValue = this.config.parser(htmlOrElement, {
+        "rules": this.config.parserRules,
+        "cleanUp": this.config.cleanUp,
         "context": parseContext,
-        "uneditableClass": org.cboard.cboardservice.config.uneditableContainerClassname,
+        "uneditableClass": this.config.uneditableContainerClassname,
         "clearInternals" : clearInternals
       });
       if (typeof(htmlOrElement) === "object") {
@@ -13422,8 +13422,8 @@ wysihtml5.views.View = Base.extend(
     _cleanAndPaste: function (oldHtml) {
       var cleanHtml = wysihtml5.quirks.cleanPastedHTML(oldHtml, {
         "referenceNode": this.composer.element,
-        "rules": org.cboard.cboardservice.config.pasteParserRulesets || [{"set": org.cboard.cboardservice.config.parserRules}],
-        "uneditableClass": org.cboard.cboardservice.config.uneditableContainerClassname
+        "rules": this.config.pasteParserRulesets || [{"set": this.config.parserRules}],
+        "uneditableClass": this.config.uneditableContainerClassname
       });
       this.composer.selection.deleteContents();
       this.composer.selection.insertHTML(cleanHtml);
@@ -13756,17 +13756,17 @@ wysihtml5.views.View = Base.extend(
       this._observe();
       if (showOnInit) { this.show(); }
 
-      if (org.cboard.cboardservice.config.classNameCommandDisabled != null) {
-        CLASS_NAME_COMMAND_DISABLED = org.cboard.cboardservice.config.classNameCommandDisabled;
+      if (editor.config.classNameCommandDisabled != null) {
+        CLASS_NAME_COMMAND_DISABLED = editor.config.classNameCommandDisabled;
       }
-      if (org.cboard.cboardservice.config.classNameCommandsDisabled != null) {
-        CLASS_NAME_COMMANDS_DISABLED = org.cboard.cboardservice.config.classNameCommandsDisabled;
+      if (editor.config.classNameCommandsDisabled != null) {
+        CLASS_NAME_COMMANDS_DISABLED = editor.config.classNameCommandsDisabled;
       }
-      if (org.cboard.cboardservice.config.classNameCommandActive != null) {
-        CLASS_NAME_COMMAND_ACTIVE = org.cboard.cboardservice.config.classNameCommandActive;
+      if (editor.config.classNameCommandActive != null) {
+        CLASS_NAME_COMMAND_ACTIVE = editor.config.classNameCommandActive;
       }
-      if (org.cboard.cboardservice.config.classNameActionActive != null) {
-        CLASS_NAME_ACTION_ACTIVE = org.cboard.cboardservice.config.classNameActionActive;
+      if (editor.config.classNameActionActive != null) {
+        CLASS_NAME_ACTION_ACTIVE = editor.config.classNameActionActive;
       }
 
       var speechInputLinks  = this.container.querySelectorAll("[data-wysihtml5-command=insertSpeech]"),
@@ -13932,7 +13932,7 @@ wysihtml5.views.View = Base.extend(
         that.bookmark = null;
       });
 
-      if (org.cboard.cboardservice.config.handleTables) {
+      if (this.editor.config.handleTables) {
           editor.on("tableselect:composer", function() {
               that.container.querySelectorAll('[data-wysihtml5-hiddentools="table"]')[0].style.display = "";
           });
@@ -14657,31 +14657,31 @@ function program17(depth0,data) {
       },
 
       loadParserRules: function() {
-        if($.type(org.cboard.cboardservice.config.parserRules) === 'string') {
+        if($.type(this.config.parserRules) === 'string') {
           $.ajax({
             dataType: 'json',
-            url: org.cboard.cboardservice.config.parserRules,
+            url: this.config.parserRules,
             context: this,
             error: function (jqXHR, textStatus, errorThrown) {
               console.log(errorThrown);
             },
             success: function (parserRules) {
-              org.cboard.cboardservice.config.parserRules = parserRules;
+              this.config.parserRules = parserRules;
               console.log('parserrules loaded');
             }
           });
         }
 
-        if(org.cboard.cboardservice.config.pasteParserRulesets && $.type(org.cboard.cboardservice.config.pasteParserRulesets) === 'string') {
+        if(this.config.pasteParserRulesets && $.type(this.config.pasteParserRulesets) === 'string') {
           $.ajax({
             dataType: 'json',
-            url: org.cboard.cboardservice.config.pasteParserRulesets,
+            url: this.config.pasteParserRulesets,
             context: this,
             error: function (jqXHR, textStatus, errorThrown) {
               console.log(errorThrown);
             },
             success: function (pasteParserRulesets) {
-              org.cboard.cboardservice.config.pasteParserRulesets = pasteParserRulesets;
+              this.config.pasteParserRulesets = pasteParserRulesets;
             }
           });
         }

@@ -315,8 +315,8 @@ var threeLevelMap = {
                     const id = d.properties.id;
                     const value = d.properties.name;
                     const keyId = options.chartConfig.keys[0].id;
-                    if (options.drill && org.cboard.cboardservice.config[keyId]){
-                        if (org.cboard.cboardservice.config[keyId].down){
+                    if (options.drill && options.drill.config[keyId]){
+                        if (options.drill.config[keyId].down){
                             options.drill.drillDown(keyId, value, that.getRenderOption, id);
                         }
                     }

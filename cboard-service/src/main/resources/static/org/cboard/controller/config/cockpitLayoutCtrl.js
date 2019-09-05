@@ -387,7 +387,7 @@ cBoard.controller('cockpitLayoutCtrl', function ($stateParams, $state, chartServ
                 if (res.status == "200") {
                     closeMessage("提示", "更新成功", function () {
                         cockpitChartDataJSON = {};
-                        $state.go("org.cboard.cboardservice.config.board");
+                        $state.go("config.board");
                         getBoardList();
                         boardChange();
                     });
@@ -407,7 +407,7 @@ cBoard.controller('cockpitLayoutCtrl', function ($stateParams, $state, chartServ
                 if (res.status == "200") {
                     closeMessage("提示", "保存成功", function () {
                         cockpitChartDataJSON = {};
-                        $state.go("org.cboard.cboardservice.config.board");
+                        $state.go("config.board");
                         getBoardList();
                         boardChange();
                     });
@@ -601,7 +601,7 @@ cBoard.controller('cockpitLayoutCtrl', function ($stateParams, $state, chartServ
     }
 
     function getWidgetList() {
-        vm.$http.get("dashboard/getWidgetList").then(function (response) {
+        vm.$http.get("mock/dashboard/widget.json").then(function (response) {
             var response = response.data;
             var map = {};
             for (var i = 0; i < response.length; i++) {
@@ -611,7 +611,7 @@ cBoard.controller('cockpitLayoutCtrl', function ($stateParams, $state, chartServ
                 map[response[i].categoryName].push({
                     name: response[i].name,
                     id: response[i].id,
-                    iconUrl: "content:url(imgs/" + org.cboard.cboardservice.config.chart_type + "-active.png)"
+                    iconUrl: "content:url(imgs/" + response[i].data.config.chart_type + "-active.png)"
                 })
             }
             vm._data.widgetList = map;
@@ -619,7 +619,7 @@ cBoard.controller('cockpitLayoutCtrl', function ($stateParams, $state, chartServ
     }
 
     var getBoardList = function () {
-        return vm.$http.get("dashboard/getBoardList").then(function (response) {
+        return vm.$http.get("mock/dashboard/board.json").then(function (response) {
             var response = response.data;
             vm._data.boardList = response;
         });
@@ -673,7 +673,7 @@ cBoard.controller('cockpitLayoutCtrl', function ($stateParams, $state, chartServ
     };
 
     function getCategoryList() {
-        vm.$http.get("dashboard/getCategoryList").then(function (response) {
+        vm.$http.get("mock/dashboard/boardCategory.json").then(function (response) {
             var response = response.data;
             vm._data.categoryList.push({
                 name: "Private DashBoard",
@@ -690,7 +690,7 @@ cBoard.controller('cockpitLayoutCtrl', function ($stateParams, $state, chartServ
 
     var getDatasetList = function () {
         var deferred = $q.defer();
-        vm.$http.get("dashboard/getDatasetList").then(function (data) {
+        vm.$http.get("mock/dashboard/dataset.json").then(function (data) {
             var data = data.data;
             deferred.resolve(data);
         });

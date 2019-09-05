@@ -19,7 +19,7 @@ cBoard.controller('boardCtrl',
         var updateUrl = "dashboard/updateBoard";
 
         var getBoardList = function () {
-            return $http.get("dashboard/getBoardList").success(function (response) {
+            return $http.get("mock/dashboard/board.json").success(function (response) {
                 $scope.boardList = response;
                 originalData = jstree_CvtVPath2TreeData(
                     $scope.boardList.map(function (ds) {
@@ -36,7 +36,7 @@ cBoard.controller('boardCtrl',
         };
 
         var getCategoryList = function () {
-            $http.get("dashboard/getCategoryList").success(function (response) {
+            $http.get("mock/dashboard/boardCategory.json").success(function (response) {
                 $scope.categoryList = [{id: null, name: translate('CONFIG.DASHBOARD.MY_DASHBOARD')}];
                 _.each(response, function (o) {
                     $scope.categoryList.push(o);
@@ -45,10 +45,10 @@ cBoard.controller('boardCtrl',
         };
 
         var getDatasetList = function () {
-            $http.get("dashboard/getDatasetList")
+            $http.get("mock/dashboard/dataset.json")
                 .then(function (response) {
                     $scope.datasetList = response.data;
-                    return $http.get("dashboard/getWidgetList");
+                    return $http.get("mock/dashboard/widget.json");
                 })
                 .then(function (response) {
                         $scope.widgetList = response.data;
@@ -150,7 +150,7 @@ cBoard.controller('boardCtrl',
         };
 
         $scope.newCockpitLayout = function () {
-            $state.go("org.cboard.cboardservice.config.cockpit")
+            $state.go("config.cockpit")
         };
 
         $scope.newTimelineLayout = function () {
@@ -478,9 +478,9 @@ cBoard.controller('boardCtrl',
             $scope.editBoard(getSelectedBoard());
             var selectedNode = jstree_GetSelectedNodes(treeID)[0];
             if ($scope.curBoard.layout.type == 'cockpit') {
-                $state.go('org.cboard.cboardservice.config.cockpit', {boardId: selectedNode.id});
+                $state.go('config.cockpit', {boardId: selectedNode.id});
             } else {
-                $state.go('org.cboard.cboardservice.config.board', {boardId: selectedNode.id}, {notify: false});
+                $state.go('config.board', {boardId: selectedNode.id}, {notify: false});
             }
         };
 
@@ -575,7 +575,7 @@ cBoard.controller('boardCtrl',
                 if (!response) {
                     return false;
                 }
-                var config = org.cboard.cboardservice.config;
+                var config = response.data.data.config;
                 var fields = [];
                 _.each(config.groups, function (e) {
                     fields.push(e.col);

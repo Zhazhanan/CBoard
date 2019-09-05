@@ -47,7 +47,7 @@ cBoard.directive('dashboardWidget', function ($compile, $templateCache, dataServ
                 pre: function (scope, element, attrs) {
                 },
                 post: function (scope, element, attrs) {
-                    switch (org.cboard.cboardservice.config.chart_type) {
+                    switch (scope.widget.widget.data.config.chart_type) {
                         case 'map':
                             renderMap(scope, element, attrs);
                             break;

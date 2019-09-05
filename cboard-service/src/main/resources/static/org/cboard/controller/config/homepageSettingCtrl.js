@@ -19,7 +19,7 @@ cBoard.controller('homepageSettingCtrl',
         var updateUrl = "dashboard/updateBoard";
 
         var getBoardList = function () {
-            return $http.get("dashboard/getBoardList").success(function (response) {
+            return $http.get("mock/dashboard/board.json").success(function (response) {
                 $scope.boardList = response;
                 originalData = jstree_CvtVPath2TreeData(
                     $scope.boardList.map(function (ds) {
@@ -46,7 +46,7 @@ cBoard.controller('homepageSettingCtrl',
         };
 
         var getCategoryList = function () {
-            $http.get("dashboard/getCategoryList").success(function (response) {
+            $http.get("mock/dashboard/boardCategory.json").success(function (response) {
                 $scope.categoryList = [{id: null, name: translate('CONFIG.DASHBOARD.MY_DASHBOARD')}];
                 _.each(response, function (o) {
                     $scope.categoryList.push(o);

@@ -9,26 +9,26 @@ cBoard.controller('cBoardCtrl', function ($rootScope, $scope, $location, $http, 
         ModalUtils.alert(msg);
     };
 
-    $http.get("commons/getUserDetail").success(function (response) {
+    $http.get("mock/commons/user.json").success(function (response) {
         $scope.user = response;
         var avatarUrl = 'dist/img/user-male-circle-blue-128.png';
         $scope.user.avatar = avatarUrl;
     });
 
     var getMenuList = function () {
-        $http.get("commons/getMenuList").success(function (response) {
+        $http.get("mock/commons/menu.json").success(function (response) {
             $scope.menuList = response;
         });
     };
 
     var getCategoryList = function () {
-        $http.get("dashboard/getCategoryList").success(function (response) {
+        $http.get("mock/dashboard/boardCategory.json").success(function (response) {
             $scope.categoryList = response;
         });
     };
 
     var getBoardList = function () {
-        $http.get("dashboard/getBoardList").success(function (response) {
+        $http.get("mock/dashboard/board.json").success(function (response) {
             $scope.boardList = response;
         });
     };

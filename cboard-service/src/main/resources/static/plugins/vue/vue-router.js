@@ -566,7 +566,7 @@ function install (Vue) {
   Vue.component('router-view', View);
   Vue.component('router-link', Link);
 
-  var strats = org.cboard.cboardservice.config.optionMergeStrategies;
+  var strats = Vue.config.optionMergeStrategies;
   // use the same hook merging strategy for route hooks
   strats.beforeRouteEnter = strats.beforeRouteLeave = strats.beforeRouteUpdate = strats.created;
 }
